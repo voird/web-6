@@ -1,80 +1,74 @@
-<?php
+<body>
 
-/**
- * Файл login.php для не авторизованного пользователя выводит форму логина.
- * При отправке формы проверяет логин/пароль и создает сессию,
- * записывает в нее логин и id пользователя.
- * После авторизации пользователь перенаправляется на главную страницу
- * для изменения ранее введенных данных.
- **/
-
-// Отправляем браузеру правильную кодировку,
-// файл login.php должен быть в кодировке UTF-8 без BOM.
-echo "<link rel='stylesheet' href='style.css'>";
-header('Content-Type: text/html; charset=UTF-8');
-
-// Начинаем сессию.
-session_start();
-
-// В суперглобальном массиве $_SESSION хранятся переменные сессии.
-// Будем сохранять туда логин после успешной авторизации.
-if (!empty($_SESSION['login'])) {
-    header('Location: index.php');
-}
-
-// В суперглобальном массиве $_SERVER PHP сохраняет некторые заголовки запроса HTTP
-// и другие сведения о клиненте и сервере, например метод текущего запроса $_SERVER['REQUEST_METHOD'].
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-?>
-
-<form action="login.php" method="post">
-  <input name="login" />
-  <input name="password" type ="password"/>
-  <input type="submit" value="Войти" />
-</form>
-
-<?php
-}
-// Иначе, если запрос был методом POST, т.е. нужно сделать авторизацию с записью логина в сессию.
-else {
-    $login=$_POST['login'];
-    $pswrd=$_POST['password'];
-    $uid=0;
-    $error=TRUE;
-    $user = 'u52813';
-    $pass = '9339974';
-    $db1 = new PDO('mysql:host=localhost;dbname=u52813', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
-    if(!empty($login) and !empty($pswrd)){
-        try{
-            $check=$db1->prepare("SELECT * FROM login WHERE login=?");
-            $check->bindParam(1,$login);
-            $check->execute();
-            $username=$check->fetchALL();
-      //     echo '<pre>';
-      //      print_r($username);
-    //        var_dump($username);
-     //       echo '</pre>';
-            if(password_verify($pswrd,$username[0][2])){
-                $uid=$username[0]['id'];
-                $error=FALSE;
-            }
-        }
-        catch(PDOException $e){
-            print('Error : ' . $e->getMessage());
-            exit();
-        }
-    }
-    if($error==TRUE){
-        print('Неправильные логин или пароль <br> Создайте нового <a href="index.php">пользователя</a> или <a href="login.php">попробуйте войти снова</a> ');
-        session_destroy();
-        exit();
-    }
-
-  // Если все ок, то авторизуем пользователя.
-  $_SESSION['login'] = $login;
-  // Записываем ID пользователя.
-  $_SESSION['uid'] = $uid;
-
-  // Делаем перенаправление.
-  header('Location: index.php');
-}
+  <div class="table1">
+    <table border="1">
+      <tr>
+        <th>Name</th>
+        <th>EMail</th>
+        <th>Year</th>
+        <th>Pol</th>
+        <th>Limbs</th>
+        <th>Superpower</th>
+        <th>Bio</th>
+      </tr>
+      <?php
+     // echo '<pre>';
+    //  print_r($pwrs);
+     // var_dump($pwrs);
+     // echo '</pre>';
+      foreach($users as $user){
+          echo '
+            <tr>
+              <td>'.$user['name'].'</td>
+              <td>'.$user['email'].'</td>
+              <td>'.$user['year'].'</td>
+              <td>'.$user['pol'].'</td>
+              <td>'.$user['limbs'].'</td>
+              <td>';
+                $user_pwrs=array(
+                    "God"=>FALSE,
+                    "fly"=>FALSE,
+                    "idclip"=>FALSE,
+                    "fireball"=>FALSE,
+                );
+       
+                foreach($pwrs as $pwr){
+                    if($pwr['id_per']==$user['id']){
+                        if($pwr['id_sup']=='10'){
+                            $user_pwrs['God']=TRUE;
+                        }
+                        if($pwr['id_sup']=='20'){
+                            $user_pwrs['fly']=TRUE;
+                        }
+                        if($pwr['id_sup']=='30'){
+                            $user_pwrs['idclip']=TRUE;
+                        }
+                        if($pwr['id_sup']=='40'){
+                            $user_pwrs['fireball']=TRUE;
+                        }
+                    }
+                }
+                if($user_pwrs['God']){echo 'God<br>';}
+                if($user_pwrs['idclip']){echo 'idclip<br>';}
+                if($user_pwrs['fly']){echo 'fly<br>';}
+                if($user_pwrs['fireball']){echo 'fireball<br>';}
+              echo '</td>
+              <td>'.$user['bio'].'</td>
+              <td>
+                <form method="get" action="ind.php">
+                  <input name=edit_id value='.$user['id'].' hidden>
+                  <input type="submit" value=Edit>
+                </form>
+              </td>
+            </tr>';
+       }
+      ?>
+    </table>
+    <?php
+    printf('Пользователи с God: %d <br>',$pwrs_count[0]);
+    printf('Пользователи с idclip: %d <br>',$pwrs_count[2]);
+    printf('Пользователи с fly: %d <br>',$pwrs_count[1]);
+    printf('Пользователи с fireball: %d <br>',$pwrs_count[3]);
+    ?>
+  </div>
+</body>
