@@ -1,0 +1,35 @@
+
+form {
+	padding: 40px;
+	background: #a4c088;
+	margin: 10px;
+} 
+
+body {
+	background: #a4c088;
+    display: block;
+    margin: 8px;
+}
+
+form {
+	border: 10px solid transparent;
+	border-image: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%)20% / 1 / 0 stretch;
+	color: white;
+	font-size: 15px;
+	background-color: #c6d5ac;
+	margin: 0 auto;
+	padding: 10px;
+	list-style-position: inside;
+	margin-top: 20px;
+}
+body{
+    display: flex;
+    justify-content:center;
+    margin-top:5%;
+    margin-bottom:5%;
+}
+.main{
+    padding: 40px;
+    width: 250px;
+    background-color: white;
+}
