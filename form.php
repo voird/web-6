@@ -93,7 +93,7 @@ if (!empty($messages)) {
             }
             else{
                 echo '
-
+            <div class ="logout">
                 <form action="index.php" method="post">
                     <input name="logout" type="submit" value="Выйти">
                 </form>
@@ -105,3 +105,12 @@ if (!empty($messages)) {
   </body>
 </html>
 	
+                
+                <input name='dd' hidden value=<?php print($_GET['edit_id']);?>>
+                <input type="submit" name='save' value="Save"/>
+                <input type="submit" name='del' value="Delete"/>
+    </form>
+             <a href='admin.php' class="button">Назад</a>
+
+    </div>
+</body>
